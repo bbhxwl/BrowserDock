@@ -1,15 +1,11 @@
 name: Release
 
-# 触发方式：
-#  1) push 到 main / pull_request → 构建 + 自动发版（tag 用时间戳命名）
-#  2) push v*.*.* 标签 → 构建 + 发版（用该 tag 命名）
-#  3) Actions 页面手动 Run workflow → 构建 + 自动发版（tag 用时间戳命名）
+# 触发方式（仅这两种会发版）：
+#  1) push v*.*.* 标签 → 用该 tag 命名发版
+#  2) Actions 页面手动 Run workflow → 用上海时间戳命名发版
 on:
   push:
-    branches: [main]
     tags: ['v*.*.*']
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -82,8 +78,6 @@ jobs:
     name: Publish GitHub Release
     needs: build
     runs-on: ubuntu-latest
-    # PR 来自 fork 时没有写权限，跳过发版
-    if: github.event_name != 'pull_request'
     steps:
       - name: Resolve release tag and name
         id: meta
