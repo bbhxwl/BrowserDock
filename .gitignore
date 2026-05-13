@@ -1,7 +1,11 @@
 node_modules/
 dist/
-build
 out/
-.idea
+.idea/
 .DS_Store
 *.log
+
+# build 目录里只忽略生成的图标，保留 make-icon.py
+build/icon.png
+build/icon.icns
+build/icon.ico
