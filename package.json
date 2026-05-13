@@ -1,0 +1,95 @@
+{
+  "name": "browser-dock",
+  "version": "0.1.0",
+  "description": "浏览器扩展（斌斌） - 多网址数据大屏拼接工具",
+  "productName": "浏览器扩展（斌斌）",
+  "author": {
+    "name": "bbhxwl",
+    "email": "binbinniubi@gmail.com"
+  },
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "icon": "python3 build/make-icon.py",
+    "pack:mac": "electron-builder --mac --universal",
+    "pack:win": "electron-builder --win",
+    "pack:all": "electron-builder --mac --universal --win",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "build": {
+    "appId": "com.bbhxwl.browserdock",
+    "productName": "浏览器扩展（斌斌）",
+    "copyright": "Copyright © 2026 bbhxwl",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "config.yaml",
+      "package.json",
+      "!**/*.{md,markdown}",
+      "!**/{.DS_Store,.git,.idea,node_modules/.cache}"
+    ],
+    "extraResources": [
+      {
+        "from": "config.yaml",
+        "to": "config.yaml"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["universal"]
+        },
+        {
+          "target": "zip",
+          "arch": ["universal"]
+        }
+      ],
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "title": "浏览器扩展（斌斌） ${version}",
+      "writeUpdateInfo": false
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "浏览器扩展（斌斌）",
+      "artifactName": "${productName}-${version}-${arch}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-${arch}-portable.${ext}"
+    }
+  }
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>toast</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .toast {
+        margin: 8px;
+        background: rgba(20, 20, 24, 0.94);
+        color: #f0f0f0;
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-size: 13px;
+        line-height: 1.65;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        opacity: 0;
+        transform: translateY(-12px);
+        transition: opacity 0.32s ease, transform 0.32s ease;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .title {
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+      kbd {
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 12px;
+        color: #fff;
+        margin: 0 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toast" id="t">
+      <div class="title" id="title"></div>
+      <div id="body"></div>
+    </div>
+    <script>
+      const lang = (new URLSearchParams(location.search).get('lang') || 'zh') === 'en' ? 'en' : 'zh';
+      const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
+      const mod = isMac ? '⌘' : 'Ctrl';
+
+      const dict = {
+        zh: {
+          title: '浏览器扩展（斌斌）已启动',
+          openSettings: '打开设置',
+          or: '或',
+          fullscreen: '全屏',
+          refresh: '刷新',
+        },
+        en: {
+          title: 'BrowserDock (Bin Bin) launched',
+          openSettings: 'Open Settings',
+          or: 'or',
+          fullscreen: 'Fullscreen',
+          refresh: 'Reload',
+        },
+      };
+      const T = dict[lang];
+      document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+      document.getElementById('title').textContent = T.title;
+      document.getElementById('body').innerHTML =
+        `${T.openSettings}: <kbd>${mod}</kbd>+<kbd>,</kbd> ${T.or} <kbd>${mod}</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd><br>` +
+        `${T.fullscreen}: <kbd>F11</kbd> · ${T.refresh}: <kbd>${mod}</kbd>+<kbd>R</kbd>`;
+      requestAnimationFrame(() => document.getElementById('t').classList.add('show'));
+    </script>
+  </body>
+</html>

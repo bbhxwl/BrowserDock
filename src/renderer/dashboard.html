@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>BrowserDock</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #000;
+        color: #888;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        overflow: hidden;
+      }
+      .toast {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translate(-50%, -20px);
+        background: rgba(20, 20, 24, 0.92);
+        color: #f0f0f0;
+        padding: 14px 22px;
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: 1.6;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        pointer-events: none;
+        z-index: 9999;
+        max-width: 80vw;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+      .toast .title {
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+      .toast kbd {
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 4px;
+        padding: 1px 6px;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: 12px;
+        color: #fff;
+      }
+      .hint {
+        position: absolute;
+        right: 14px;
+        bottom: 10px;
+        font-size: 11px;
+        opacity: 0.35;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .hint kbd {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 3px;
+        padding: 0 4px;
+        font-family: ui-monospace, Menlo, Consolas, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="hint" class="hint"></div>
+
+    <script>
+      const lang = (new URLSearchParams(location.search).get('lang') || 'zh') === 'en' ? 'en' : 'zh';
+      const isMac =
+        navigator.userAgentData?.platform === 'macOS' ||
+        /Mac/i.test(navigator.platform || navigator.userAgent);
+      const mod = isMac ? '⌘' : 'Ctrl';
+      const orWord = lang === 'en' ? 'or' : '或';
+      const titleTxt =
+        lang === 'en' ? 'BrowserDock (Bin Bin) launched' : '浏览器扩展（斌斌）已启动';
+      const settingsTxt = lang === 'en' ? 'Settings' : '设置';
+      const fsTxt = lang === 'en' ? 'Fullscreen' : '全屏';
+      const reloadTxt = lang === 'en' ? 'Reload' : '刷新';
+
+      document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+
+      const toast = document.getElementById('toast');
+      toast.innerHTML =
+        `<div class="title">${titleTxt}</div>` +
+        `<div>` +
+        `${settingsTxt}: <kbd>${mod}</kbd>+<kbd>,</kbd>　${orWord}　<kbd>${mod}</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd><br>` +
+        `${fsTxt}: <kbd>F11</kbd>　${reloadTxt}: <kbd>${mod}</kbd>+<kbd>R</kbd>` +
+        `</div>`;
+      requestAnimationFrame(() => toast.classList.add('show'));
+      setTimeout(() => toast.classList.remove('show'), 5000);
+
+      document.getElementById('hint').innerHTML =
+        `<kbd>${mod}</kbd>+<kbd>,</kbd> ${settingsTxt} · <kbd>F11</kbd> ${fsTxt} · <kbd>${mod}</kbd>+<kbd>R</kbd> ${reloadTxt}`;
+    </script>
+  </body>
+</html>

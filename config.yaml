@@ -1,0 +1,10 @@
+# 浏览器扩展（斌斌） 配置文件
+# 由 UI 自动写入，可手动编辑，保存后窗口会自动重载
+
+fullscreen: true
+layout: auto
+refreshSec: 0
+language: auto   # auto | zh | en
+urls:
+  - https://www.baidu.com
+cells: []
