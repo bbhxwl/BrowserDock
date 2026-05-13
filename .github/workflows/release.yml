@@ -1,12 +1,15 @@
 name: Release
 
 # 触发方式：
-#  1) 推送 v*.*.* 标签自动发版（推荐）
-#  2) Actions 页面手动 Run workflow
+#  1) push 到 main / pull_request → 构建 + 自动发版（tag 用时间戳命名）
+#  2) push v*.*.* 标签 → 构建 + 发版（用该 tag 命名）
+#  3) Actions 页面手动 Run workflow → 构建 + 自动发版（tag 用时间戳命名）
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches: [main]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -79,8 +82,27 @@ jobs:
     name: Publish GitHub Release
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    # PR 来自 fork 时没有写权限，跳过发版
+    if: github.event_name != 'pull_request'
     steps:
+      - name: Resolve release tag and name
+        id: meta
+        shell: bash
+        run: |
+          # tag 推送 → 用该 tag 名；其他情况 → 用上海时间戳生成 v年.月.日-时分
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+            NAME="$TAG"
+          else
+            STAMP="$(TZ=Asia/Shanghai date +'%Y.%m.%d-%H%M')"
+            TAG="v${STAMP}"
+            NAME="Build ${STAMP} (${GITHUB_REF_NAME})"
+          fi
+          echo "tag=$TAG"   >> "$GITHUB_OUTPUT"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "Release tag : $TAG"
+          echo "Release name: $NAME"
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -95,6 +117,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.name }}
           files: release/*
           generate_release_notes: true
           fail_on_unmatched_files: true
+          make_latest: true
