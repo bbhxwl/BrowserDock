@@ -11,6 +11,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
+    "test": "node --test test/*.test.js",
     "icon": "python3 build/make-icon.py",
     "pack:mac": "electron-builder --mac --universal",
     "pack:win": "electron-builder --win",

@@ -4,7 +4,8 @@
 fullscreen: true
 layout: auto
 refreshSec: 0
-language: auto   # auto | zh | en
+hideScrollbars: false
+language: auto
 urls:
   - https://www.baidu.com
 cells: []

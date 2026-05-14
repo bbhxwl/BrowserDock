@@ -54,6 +54,7 @@ function renderAll() {
   $('#fullscreen').checked = !!state.fullscreen;
   $('#layout').value = state.layout || 'auto';
   $('#refresh').value = state.refreshSec || 0;
+  $('#hideScrollbars').checked = !!state.hideScrollbars;
   $('#language').value = state.language || 'auto';
   renderUrls();
   renderPreview();
@@ -150,7 +151,7 @@ function removeAt(i) {
 }
 
 function addUrl() {
-  state.urls.push('https://');
+  state.urls.push('');
   renderUrls();
   renderPreview();
 }
@@ -255,6 +256,7 @@ async function init() {
     renderPreview();
   };
   $('#refresh').onchange = (e) => (state.refreshSec = parseInt(e.target.value, 10) || 0);
+  $('#hideScrollbars').onchange = (e) => (state.hideScrollbars = e.target.checked);
   $('#language').onchange = async (e) => {
     state.language = e.target.value;
     const sysLocale = await window.dock.getSystemLocale();

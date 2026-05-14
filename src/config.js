@@ -6,6 +6,7 @@ const DEFAULT_CONFIG = Object.freeze({
   fullscreen: true,
   layout: 'auto',
   refreshSec: 0,
+  hideScrollbars: false,
   language: 'auto', // auto | zh | en
   urls: ['https://www.baidu.com'],
   cells: [],
@@ -45,12 +46,12 @@ function normalize(input) {
   const cfg = { ...DEFAULT_CONFIG, ...(input || {}) };
   cfg.fullscreen = Boolean(cfg.fullscreen);
   cfg.layout = cfg.layout === 'manual' ? 'manual' : 'auto';
+  cfg.hideScrollbars = Boolean(cfg.hideScrollbars);
   cfg.language = cfg.language === 'zh' || cfg.language === 'en' ? cfg.language : 'auto';
   const rs = Number(cfg.refreshSec);
   cfg.refreshSec = Number.isFinite(rs) ? Math.max(0, Math.floor(rs)) : 0;
-  cfg.urls = Array.isArray(cfg.urls)
-    ? cfg.urls.filter((u) => typeof u === 'string' && u.trim().length > 0).map((u) => u.trim())
-    : [];
+  const urls = Array.isArray(cfg.urls) ? cfg.urls.map(normalizeUrl).filter(Boolean) : [];
+  cfg.urls = urls.length > 0 ? urls : [...DEFAULT_CONFIG.urls];
   cfg.cells = Array.isArray(cfg.cells)
     ? cfg.cells.map((c) => ({
         x: clampUnit(c?.x),
@@ -60,6 +61,26 @@ function normalize(input) {
       }))
     : [];
   return cfg;
+}
+
+function normalizeUrl(value) {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\/https?:\/\//i.test(trimmed)) return null;
+
+  try {
+    const parsed = new URL(trimmed);
+    if ((parsed.protocol === 'http:' || parsed.protocol === 'https:') && parsed.hostname) {
+      return trimmed;
+    }
+    if (parsed.protocol === 'file:' && parsed.pathname) {
+      return trimmed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 function clampUnit(v, fallback = 0) {
@@ -76,4 +97,5 @@ module.exports = {
   readConfig,
   writeConfig,
   normalize,
+  normalizeUrl,
 };

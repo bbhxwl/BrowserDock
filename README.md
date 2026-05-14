@@ -15,6 +15,7 @@ A multi-URL dashboard window splitter built with Electron. Tile multiple web pag
 - **Two-way config sync** — UI edits write `config.yaml`; external edits to YAML push back into the window via a file watcher
 - **Single-window split + fullscreen** — uses Electron `WebContentsView` to render multiple pages side-by-side
 - **Optional auto-refresh** — reload every panel on a fixed interval
+- **Optional hidden page scrollbars** — keep multi-panel dashboards visually clean while pages remain scrollable
 - **i18n** — auto-detects system language (zh / en) and lets you override it in settings
 - **Cross-platform packaging** — DMG / Mac zip / Windows NSIS installer / Windows portable EXE
 - **GitHub Actions release pipeline** — push a `v*.*.*` tag and binaries land on the Releases page
@@ -35,6 +36,7 @@ npm start
    - Add / remove / reorder URLs
    - Switch layout mode (`auto` / `manual`)
    - Change auto-refresh interval
+   - Hide page scrollbars
    - Drag tiles in the preview (manual mode)
    - Switch UI language (Auto / 中文 / English)
 3. Click **Save and apply** — the change takes effect immediately and `config.yaml` is updated.
@@ -55,6 +57,7 @@ npm start
 fullscreen: true        # launch in fullscreen
 layout: auto            # auto | manual
 refreshSec: 0           # auto-refresh seconds, 0 = off
+hideScrollbars: false   # hide page scrollbars while keeping pages scrollable
 language: auto          # auto | zh | en
 urls:
   - https://example.com/dashboard1

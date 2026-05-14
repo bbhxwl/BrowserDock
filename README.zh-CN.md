@@ -15,6 +15,7 @@
 - **配置双向同步**：UI 编辑 → 写 `config.yaml`；外部编辑 YAML → 文件 watcher 推回 UI 并重载面板
 - **单窗口分屏 + 全屏**：使用 Electron `WebContentsView` 在同一窗口内并排渲染多个页面
 - **可选自动刷新**：每个面板按设定秒数自动重载
+- **可选隐藏页面滚动条**：多面板大屏更整洁，页面仍可滚动
 - **中英文 i18n**：自动跟随系统语言（zh / en），可在设置内手动切换
 - **跨平台打包**：DMG / Mac zip / Windows NSIS 安装包 / Windows Portable 单文件
 - **GitHub Actions 自动发版**：推送 `v*.*.*` 标签即触发构建并上传到 Releases
@@ -35,6 +36,7 @@ npm start
    - 增 / 删 / 排序 URL
    - 切换布局模式（auto / manual）
    - 调整自动刷新间隔
+   - 隐藏页面滚动条
    - 在预览图上拖动调整每块大小（manual 模式）
    - 切换界面语言（跟随系统 / 中文 / English）
 3. 点击 **保存并应用** 立即生效，并写回 `config.yaml`。
@@ -55,6 +57,7 @@ npm start
 fullscreen: true        # 启动时全屏
 layout: auto            # auto | manual
 refreshSec: 0           # 自动刷新秒数，0 关闭
+hideScrollbars: false   # 隐藏页面滚动条，但保留页面滚动能力
 language: auto          # auto | zh | en
 urls:
   - https://example.com/dashboard1
